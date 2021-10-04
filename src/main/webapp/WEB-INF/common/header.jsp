@@ -21,7 +21,7 @@
 				<div class="col-md-3 text-end"> 
 					<a href="login.jsp" class="btn btn-outline-primary me-2">Login</a>
 					<button type="button" class="btn btn-primary">Sign-up</button>
-				</div>
+				</div> 
 				<% } else { %>
 				<ul class="nav nav-pills">
 					<li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>

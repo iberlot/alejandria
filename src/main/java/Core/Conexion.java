@@ -8,7 +8,7 @@ import Util.PropertiesUtil;
 
 public class Conexion {
 
-	static Connection getConnection() {
+	public static Connection getConnection() {
 
 		Connection connection = null;
 
