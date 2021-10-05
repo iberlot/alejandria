@@ -2,11 +2,17 @@
 
 <div class="container">
 	<form method="post" action="servletLogin">
-		<label name="lblError"><%=request.getSession().getAttribute("Error")!=null?request.getSession().getAttribute("Error"):""%></label>
-	
-		<label>Documento: <input id="documento" type="text" placeholder="Documento" required></label> 
-		<label>Password: <input id="password" type="password" placeholder="Password" required></label>
-		
+		<%
+		if (request.getSession().getAttribute("Error") != null) {
+		%>
+		<div class="alert alert-danger" role="alert">
+			<label name="lblError"><%=request.getSession().getAttribute("Error")%></label>
+		</div>
+		<%
+		}
+		%>
+		<label>Documento: <input id="documento" name="documento" type="number" placeholder="Documento" required></label> <label>Password: <input id="password" name="password" type="password" placeholder="Password" required></label>
+
 		<button type="submit" class="btn btn-primary">Aceptar</button>
 	</form>
 </div>

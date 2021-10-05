@@ -11,10 +11,10 @@
  * @since 3 oct. 2021
  * @user IVANB
  * @name Administrativos.java
- * @package Negocio.Dominio
+ * @package negocio.dominio
  * @project Alejandria
  */
-package Negocio.Dominio;
+package negocio.dominio;
 
 /**
  * @author IVANB

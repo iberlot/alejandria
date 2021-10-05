@@ -11,10 +11,10 @@
  * @since 3 oct. 2021
  * @user IVANB
  * @name Libros.java
- * @package Negocio.Dominio
+ * @package negocio.dominio
  * @project Alejandria
  */
-package Negocio.Dominio;
+package negocio.dominio;
 
 import java.io.Serializable;
 import java.util.HashSet;

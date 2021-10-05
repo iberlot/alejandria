@@ -14,7 +14,7 @@
  * @package Negocio.Dominio
  * @project Alejandria
  */
-package Negocio.Dominio;
+package negocio.dominio;
 
 import java.io.Serializable;
 

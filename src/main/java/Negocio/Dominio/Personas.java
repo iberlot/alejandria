@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Negocio.Dominio;
+package negocio.dominio;
 
 import java.io.Serializable;
 

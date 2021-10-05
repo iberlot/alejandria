@@ -1,10 +1,10 @@
-package Core;
+package core;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import Util.PropertiesUtil;
+import util.PropertiesUtil;
 
 public class Conexion {
 

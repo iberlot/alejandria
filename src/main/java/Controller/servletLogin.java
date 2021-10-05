@@ -1,18 +1,18 @@
-package Controller;
+package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Core.Conexion;
+import negocio.dao.iDAO;
+import negocio.dao.factory.ClientesFactory;
+import negocio.dominio.Clientes;
 
 /**
  * Servlet implementation class HolaMundoServlet
@@ -20,49 +20,56 @@ import Core.Conexion;
 @WebServlet("/servletLogin")
 public class servletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public servletLogin() {
-        super();
-      
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
-//		response.getWriter().append("<br>");
-//		response.getWriter().append("Hola Mundo");
-		
-		  
-        try {
-    		Connection connection = Conexion.getConnection();;
-    		Statement stm = connection.createStatement();
-    		ResultSet rs = stm.executeQuery("SELECT * FROM personas");
-    		
-    		while (rs.next()) {
-    			System.out.println(rs.getString("dni") + " - " + rs.getString("apellido") + " ("
-    					+ rs.getString("nombre") + ")");
-    		}
+	public servletLogin() {
+		super();
 
-    		stm.close();
-    		connection.close();
-    	} catch (SQLException e) {
-    		e.printStackTrace();
-    	}
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		iDAO<Clientes> clienteDAO = ClientesFactory.getImplementation("BD");
+
+		Clientes cli = (Clientes) clienteDAO.findId(Long.parseLong(request.getParameter("documento")));
+
+		if (cli.getPassword().equals(request.getParameter("password"))) {
+
+			Cookie cookieUs = new Cookie("nombreUsuario",
+					URLEncoder.encode(request.getParameter("documento"), "UTF-8"));
+			Cookie cookieClave = new Cookie("claveUsuario",
+					URLEncoder.encode(request.getParameter("password"), "UTF-8"));
+			cookieUs.setMaxAge(365 * 24 * 60 * 60);
+			cookieClave.setMaxAge(365 * 24 * 60 * 60);
+			response.addCookie(cookieUs);
+			response.addCookie(cookieClave);
+
+		} else {
+
+			request.getSession().setAttribute("Error", "Contraseña o usuario incorrecto");
+			request.getRequestDispatcher("login.jsp").forward(request, response);
+
+			System.out.println("Nombre: " + cli.getNombre());
+			System.out.println("Pass: " + cli.getPassword());
+		}
 	}
 
 	@Override
