@@ -3,14 +3,14 @@ package negocio.dao.implementacion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import core.Conexion;
 import negocio.dao.iDAO;
+import negocio.dominio.Administrativos;
 import negocio.dominio.Clientes;
 
-public class ClientesImpl implements iDAO<Clientes> {
+public class AdministrativosImpl implements iDAO<Administrativos> {
 
 	/*
 	 * public Usuario buscarUsuarioID(int id) { Connection con = null;
@@ -97,39 +97,8 @@ public class ClientesImpl implements iDAO<Clientes> {
 	 * ps.execute(); ps.close(); }
 	 */
 	@Override
-	public boolean add(Clientes elemento) {
-
-		String sql = "INSERT INTO personas(dni, nombre, apellido, telefono, password) VALUES (?,?,?,?,?)";
-		String sql2 = "INSERT INTO clientes(dni, email) VALUES (?,?)";
-
-		try {
-			Connection con = Conexion.getConnection();
-
-			PreparedStatement ps = con.prepareStatement(sql);
-
-			ps.setLong(1, elemento.getDni());
-			ps.setString(2, elemento.getNombre());
-			ps.setString(3, elemento.getApellido());
-			ps.setLong(4, elemento.getTelefono());
-			ps.setString(5, elemento.getPassword());
-
-			ps.execute();
-
-			PreparedStatement ps2 = con.prepareStatement(sql2);
-
-			ps2.setLong(1, elemento.getDni());
-			ps2.setString(2, elemento.getEmail());
-
-			ps2.execute();
-
-			ps.close();
-
-			return true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public boolean add(Administrativos elemento) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -152,19 +121,19 @@ public class ClientesImpl implements iDAO<Clientes> {
 	}
 
 	@Override
-	public ArrayList<Clientes> getLista() {
+	public ArrayList<Administrativos> getLista() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Clientes findId(long id) {
+	public Administrativos findId(long id) {
 
 		Connection con = null;
 		PreparedStatement prep = null;
 
 		try {
-			String sql = "SELECT * FROM personas INNER JOIN clientes ON clientes.dni = personas.dni WHERE personas.dni="
+			String sql = "SELECT * FROM personas INNER JOIN administrativos ON administrativos.dni = personas.dni WHERE personas.dni="
 					+ id;
 
 			con = Conexion.getConnection();
@@ -179,7 +148,7 @@ public class ClientesImpl implements iDAO<Clientes> {
 				cliente.setDni(rs.getLong("dni"));
 				cliente.setApellido(rs.getString("apellido"));
 				cliente.setNombre(rs.getString("nombre"));
-				cliente.setEmail(rs.getString("email"));
+				cliente.setEmail(rs.getString("legajo"));
 				cliente.setTelefono(rs.getLong("telefono"));
 				cliente.setPassword(rs.getString("password"));
 
@@ -187,7 +156,7 @@ public class ClientesImpl implements iDAO<Clientes> {
 			return cliente;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return 0;
 		}
 	}
 }

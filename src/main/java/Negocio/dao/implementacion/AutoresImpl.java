@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 import core.Conexion;
 import negocio.dao.iDAO;
-import negocio.dominio.Clientes;
+import negocio.dominio.Autores;
 
-public class ClientesImpl implements iDAO<Clientes> {
+public class AutoresImpl implements iDAO<Autores> {
 
 	/*
 	 * public Usuario buscarUsuarioID(int id) { Connection con = null;
@@ -97,30 +97,36 @@ public class ClientesImpl implements iDAO<Clientes> {
 	 * ps.execute(); ps.close(); }
 	 */
 	@Override
-	public boolean add(Clientes elemento) {
+	public boolean add(Autores elemento) {
 
-		String sql = "INSERT INTO personas(dni, nombre, apellido, telefono, password) VALUES (?,?,?,?,?)";
-		String sql2 = "INSERT INTO clientes(dni, email) VALUES (?,?)";
+		String sql = "INSERT INTO libros(isbn, titulo, paginas, genero, edicion, autor) VALUES (?,?,?,?,?,?)";
+
+		String sql2 = "INSERT INTO libros_editorial(isbn, editorial, stock) VALUES (?,?,0)";
 
 		try {
 			Connection con = Conexion.getConnection();
 
 			PreparedStatement ps = con.prepareStatement(sql);
-
-			ps.setLong(1, elemento.getDni());
-			ps.setString(2, elemento.getNombre());
-			ps.setString(3, elemento.getApellido());
-			ps.setLong(4, elemento.getTelefono());
-			ps.setString(5, elemento.getPassword());
-
-			ps.execute();
-
-			PreparedStatement ps2 = con.prepareStatement(sql2);
-
-			ps2.setLong(1, elemento.getDni());
-			ps2.setString(2, elemento.getEmail());
-
-			ps2.execute();
+//
+//			ps.setString(1, elemento.getIsbn());
+//			ps.setString(2, elemento.getTitulo());
+//			ps.setInt(3, elemento.getPaginas());
+//			ps.setString(4, elemento.getGenero());
+//			ps.setString(5, elemento.getEdicion());
+//			ps.setInt(6, elemento.getAutor().getId());
+//
+//			ps.execute();
+//
+//			for (Editoriales editorial : elemento.getEditoriales()) {
+//				PreparedStatement ps2 = con.prepareStatement(sql2);
+//
+//				ps2.setString(1, elemento.getIsbn());
+//				ps2.setInt(2, editorial.getId());
+//
+//				ps2.execute();
+//
+//				ps2.close();
+//			}
 
 			ps.close();
 
@@ -152,39 +158,38 @@ public class ClientesImpl implements iDAO<Clientes> {
 	}
 
 	@Override
-	public ArrayList<Clientes> getLista() {
+	public ArrayList<Autores> getLista() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Clientes findId(long id) {
+	public Autores findId(long id) {
 
 		Connection con = null;
 		PreparedStatement prep = null;
 
 		try {
-			String sql = "SELECT * FROM personas INNER JOIN clientes ON clientes.dni = personas.dni WHERE personas.dni="
-					+ id;
+			String sql = "SELECT * FROM autores WHERE id=?";
 
 			con = Conexion.getConnection();
 			prep = con.prepareStatement(sql);
 
+			prep.setInt(1, (int) id);
+
 			ResultSet rs = prep.executeQuery();
 
-			Clientes cliente = new Clientes();
+			Autores autor = new Autores();
 
 			if (rs.next()) {
 
-				cliente.setDni(rs.getLong("dni"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setEmail(rs.getString("email"));
-				cliente.setTelefono(rs.getLong("telefono"));
-				cliente.setPassword(rs.getString("password"));
+				autor.setId(rs.getInt("id"));
+				autor.setApellido(rs.getString("apellido"));
+				autor.setNombre(rs.getString("nombre"));
+				autor.setNacionalidad(rs.getString("nacional"));
 
 			}
-			return cliente;
+			return autor;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -17,23 +17,25 @@
 				<use xlink:href="#bootstrap"></use></svg>
 					<span class="fs-4"><h1>Alejandria</h1></span>
 				</a>
-				<% if (request.getSession().getAttribute("usuario")==null) { %>
+				<% 
+				if (session.getAttribute("nombreUsuario")==null) { %>
 				<div class="col-md-3 text-end"> 
 					<a href="login.jsp" class="btn btn-outline-primary me-2">Login</a>
 					<button type="button" class="btn btn-primary">Sign-up</button>
 				</div> 
 				<% } else { %>
 				<ul class="nav nav-pills">
-					<li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-					<li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-					<li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
-					<li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
-					<li class="nav-item"><a href="#" class="nav-link">About</a></li>
+					<li class="nav-item"><a href="index.jsp" class="nav-link active" aria-current="page">Home</a></li>
+					<% if (session.getAttribute("admin")!=null) { %>
+					<li class="nav-item"><a href="altaLibros.jsp" class="nav-link">Alta Libros</a></li>
+					<li class="nav-item"><a href="altaClientes.jsp" class="nav-link">Alta Clientes</a></li>
+					<li class="nav-item"><a href="historial.jsp" class="nav-link">Historial</a></li>
+					<% } else { %>
+					<li class="nav-item"><a href="buscador.jsp" class="nav-link">Buscador</a></li>
+					<li class="nav-item"><a href="historial.jsp" class="nav-link">Historial</a></li>
+					<% } %>
+					<li class="nav-item"><a href="cerrarSession" class="nav-link">EXIT</a></li>
 				</ul>
-
-				<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-					<input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-				</form>
 
 				<div class="dropdown text-end">
 					<a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">

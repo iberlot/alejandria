@@ -9,9 +9,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import negocio.dao.iDAO;
+import negocio.dao.factory.AdminFactory;
 import negocio.dao.factory.ClientesFactory;
+import negocio.dominio.Administrativos;
 import negocio.dominio.Clientes;
 
 /**
@@ -47,29 +50,68 @@ public class servletLogin extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		iDAO<Clientes> clienteDAO = ClientesFactory.getImplementation("BD");
 
-		Clientes cli = (Clientes) clienteDAO.findId(Long.parseLong(request.getParameter("documento")));
+		if (request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
 
-		if (cli.getPassword().equals(request.getParameter("password"))) {
+			iDAO<Administrativos> adminDAO = AdminFactory.getImplementation("BD");
 
-			Cookie cookieUs = new Cookie("nombreUsuario",
-					URLEncoder.encode(request.getParameter("documento"), "UTF-8"));
-			Cookie cookieClave = new Cookie("claveUsuario",
-					URLEncoder.encode(request.getParameter("password"), "UTF-8"));
-			cookieUs.setMaxAge(365 * 24 * 60 * 60);
-			cookieClave.setMaxAge(365 * 24 * 60 * 60);
-			response.addCookie(cookieUs);
-			response.addCookie(cookieClave);
+			Administrativos adm = (Administrativos) adminDAO.findId(Long.parseLong(request.getParameter("documento")));
 
+			if (adm.getPassword() != null && adm.getPassword().equals(request.getParameter("password"))) {
+
+				Cookie cookieUs = new Cookie("nombreUsuario",
+						URLEncoder.encode(request.getParameter("documento"), "UTF-8"));
+				Cookie cookieClave = new Cookie("claveUsuario",
+						URLEncoder.encode(request.getParameter("password"), "UTF-8"));
+				cookieUs.setMaxAge(365 * 24 * 60 * 60);
+				cookieClave.setMaxAge(365 * 24 * 60 * 60);
+				response.addCookie(cookieUs);
+				response.addCookie(cookieClave);
+
+				HttpSession misession = request.getSession(true);
+				misession.setAttribute("nombreUsuario", request.getParameter("documento"));
+				misession.setAttribute("admin", "true");
+
+				request.getRequestDispatcher("index.jsp").forward(request, response);
+
+			} else {
+
+				request.getSession().setAttribute("Error", "Contraseña o usuario incorrecto");
+				request.getRequestDispatcher("login.jsp").forward(request, response);
+
+				System.out.println(adm.getApellido());
+				System.out.println(adm.getPassword());
+			}
 		} else {
 
-			request.getSession().setAttribute("Error", "Contraseña o usuario incorrecto");
-			request.getRequestDispatcher("login.jsp").forward(request, response);
+			iDAO<Clientes> clienteDAO = ClientesFactory.getImplementation("BD");
 
-			System.out.println("Nombre: " + cli.getNombre());
-			System.out.println("Pass: " + cli.getPassword());
+			Clientes cli = (Clientes) clienteDAO.findId(Long.parseLong(request.getParameter("documento")));
+
+			if (cli.getPassword() != null && cli.getPassword().equals(request.getParameter("password"))) {
+
+				Cookie cookieUs = new Cookie("nombreUsuario",
+						URLEncoder.encode(request.getParameter("documento"), "UTF-8"));
+				Cookie cookieClave = new Cookie("claveUsuario",
+						URLEncoder.encode(request.getParameter("password"), "UTF-8"));
+				cookieUs.setMaxAge(365 * 24 * 60 * 60);
+				cookieClave.setMaxAge(365 * 24 * 60 * 60);
+				response.addCookie(cookieUs);
+				response.addCookie(cookieClave);
+
+				HttpSession misession = request.getSession(true);
+				misession.setAttribute("nombreUsuario", request.getParameter("documento"));
+
+				request.getRequestDispatcher("index.jsp").forward(request, response);
+			} else {
+
+				request.getSession().setAttribute("Error", "Contraseña o usuario incorrecto");
+				request.getRequestDispatcher("login.jsp").forward(request, response);
+
+				System.out.println();
+			}
 		}
+
 	}
 
 	@Override

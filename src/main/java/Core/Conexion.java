@@ -19,7 +19,11 @@ public class Conexion {
 		}
 
 		try {
-			connection = DriverManager.getConnection(PropertiesUtil.getPropertyUrl(),PropertiesUtil.getPropertyUsername(), PropertiesUtil.getPropertyPassword() );
+//			System.out.println(PropertiesUtil.getPropertyUrl() + "  " + PropertiesUtil.getPropertyUsername() + "  "
+//					+ PropertiesUtil.getPropertyPassword());
+
+			connection = DriverManager.getConnection(PropertiesUtil.getPropertyUrl(),
+					PropertiesUtil.getPropertyUsername(), PropertiesUtil.getPropertyPassword());
 		} catch (SQLException e) {
 
 			e.printStackTrace();
