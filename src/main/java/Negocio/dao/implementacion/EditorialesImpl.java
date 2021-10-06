@@ -8,16 +8,16 @@ import java.util.ArrayList;
 
 import core.Conexion;
 import negocio.dao.iDAO;
-import negocio.dominio.Autores;
+import negocio.dominio.Editoriales;
 
-public class AutoresImpl implements iDAO<Autores> {
+public class EditorialesImpl implements iDAO<Editoriales> {
 
 	public int obtenerUltId() {
 		Connection con = null;
 		PreparedStatement prep = null;
 		try {
 			con = Conexion.getConnection();
-			prep = con.prepareStatement("SELECT MAX(id) FROM autores");
+			prep = con.prepareStatement("SELECT MAX(id) FROM editoriales");
 			ResultSet rs = prep.executeQuery();
 			int ultId = 0;
 			if (rs.next()) {
@@ -32,18 +32,21 @@ public class AutoresImpl implements iDAO<Autores> {
 	}
 
 	@Override
-	public boolean add(Autores elemento) {
+	public boolean add(Editoriales elemento) {
 
-		String sql = "INSERT INTO autores(nombre, apellido, nacional) VALUES (?,?,(SELECT id_gentilicio FROM gentilicio WHERE gentilicio = ?))";
+		String sql = "INSERT INTO editoriales(id, nombre, direccion, web, email, telefono) VALUES (?,?,?,?,?,?)";
 
 		try {
 			Connection con = Conexion.getConnection();
 
 			PreparedStatement ps = con.prepareStatement(sql);
 
-			ps.setString(1, elemento.getNombre());
-			ps.setString(2, elemento.getApellido());
-			ps.setString(3, elemento.getNacionalidad());
+			ps.setInt(1, elemento.getId());
+			ps.setString(2, elemento.getNombre());
+			ps.setString(3, elemento.getDireccion());
+			ps.setString(4, elemento.getWeb());
+			ps.setString(5, elemento.getEmail());
+			ps.setLong(6, elemento.getTelefono());
 
 			ps.execute();
 
@@ -77,30 +80,31 @@ public class AutoresImpl implements iDAO<Autores> {
 	}
 
 	@Override
-	public ArrayList<Autores> getLista() {
+	public ArrayList<Editoriales> getLista() {
 
-		ArrayList<Autores> autores = new ArrayList<>();
+		ArrayList<Editoriales> editoriales = new ArrayList<>();
 
 		Connection con = null;
 		PreparedStatement prep = null;
 
 		try {
 			con = Conexion.getConnection();
-			prep = con.prepareStatement(
-					"SELECT autores.id AS id, autores.nombre AS nombre, autores.apellido AS apellido, gentilicio.gentilicio AS nacionalidad FROM autores INNER JOIN gentilicio ON gentilicio.id_gentilicio = autores.nacional");
+			prep = con.prepareStatement("SELECT * FROM editoriales");
 
 			ResultSet rs = prep.executeQuery();
 
 			while (rs.next()) {
 
-				Autores autor = new Autores();
+				Editoriales editorial = new Editoriales();
 
-				autor.setApellido(rs.getString("apellido"));
-				autor.setNacionalidad(rs.getString("nacionalidad"));
-				autor.setId(rs.getInt("id"));
-				autor.setNombre(rs.getString("nombre"));
+				editorial.setDireccion(rs.getString("direccion"));
+				editorial.setEmail(rs.getString("email"));
+				editorial.setId(rs.getInt("id"));
+				editorial.setNombre(rs.getString("nombre"));
+				editorial.setTelefono(rs.getLong("telefono"));
+				editorial.setWeb(rs.getString("web"));
 
-				autores.add(autor);
+				editoriales.add(editorial);
 			}
 			prep.close();
 
@@ -108,36 +112,37 @@ public class AutoresImpl implements iDAO<Autores> {
 			e.printStackTrace();
 		}
 
-		return autores;
+		return editoriales;
 	}
 
 	@Override
-	public Autores findId(long id) {
+	public Editoriales findId(long id) {
 
 		Connection con = null;
 		PreparedStatement prep = null;
 
 		try {
-			String sql = "SELECT * FROM autores WHERE id=?";
+			String sql = "SELECT * FROM editoriales WHERE id = ?";
 
 			con = Conexion.getConnection();
 			prep = con.prepareStatement(sql);
-
 			prep.setInt(1, (int) id);
 
 			ResultSet rs = prep.executeQuery();
 
-			Autores autor = new Autores();
+			Editoriales editorial = new Editoriales();
 
 			if (rs.next()) {
 
-				autor.setId(rs.getInt("id"));
-				autor.setApellido(rs.getString("apellido"));
-				autor.setNombre(rs.getString("nombre"));
-				autor.setNacionalidad(rs.getString("nacional"));
-
+				editorial.setId(rs.getInt("id"));
+				editorial.setDireccion(rs.getString("direccion"));
+				editorial.setEmail(rs.getString("email"));
+				editorial.setNombre(rs.getString("nombre"));
+				editorial.setTelefono(rs.getLong("telefono"));
+				editorial.setWeb(rs.getString("web"));
 			}
-			return autor;
+
+			return editorial;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

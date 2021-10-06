@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import core.Conexion;
 import negocio.dao.iDAO;
 import negocio.dominio.Administrativos;
-import negocio.dominio.Clientes;
 
 public class AdministrativosImpl implements iDAO<Administrativos> {
 
@@ -141,22 +140,22 @@ public class AdministrativosImpl implements iDAO<Administrativos> {
 
 			ResultSet rs = prep.executeQuery();
 
-			Clientes cliente = new Clientes();
+			Administrativos admin = new Administrativos();
 
 			if (rs.next()) {
 
-				cliente.setDni(rs.getLong("dni"));
-				cliente.setApellido(rs.getString("apellido"));
-				cliente.setNombre(rs.getString("nombre"));
-				cliente.setEmail(rs.getString("legajo"));
-				cliente.setTelefono(rs.getLong("telefono"));
-				cliente.setPassword(rs.getString("password"));
+				admin.setDni(rs.getLong("dni"));
+				admin.setApellido(rs.getString("apellido"));
+				admin.setNombre(rs.getString("nombre"));
+				admin.setLegajo(Integer.parseInt(rs.getString("legajo")));
+				admin.setTelefono(rs.getLong("telefono"));
+				admin.setPassword(rs.getString("password"));
 
 			}
-			return cliente;
+			return admin;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 0;
+			return null;
 		}
 	}
 }

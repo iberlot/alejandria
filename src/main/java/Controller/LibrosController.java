@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import negocio.dao.iDAO;
 import negocio.dao.factory.AutoresFactory;
+import negocio.dao.factory.EditorialesFactory;
 import negocio.dao.factory.LibrosFactory;
 import negocio.dominio.Autores;
 import negocio.dominio.Editoriales;
